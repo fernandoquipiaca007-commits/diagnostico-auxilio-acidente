@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cut">
+<title>Teste do Auxílio-Acidente</title>
+<meta name="description" content="Responda 7 perguntas rápidas e descubra se o seu caso pode ter direito ao auxílio-acidente do INSS.">
+<meta property="og:title" content="Teste gratuito: você pode ter direito ao auxílio-acidente?">
+<meta property="og:description" content="7 perguntas, menos de 1 minuto. Análise do caso com advogada previdenciária.">
+<meta name="theme-color" content="#0f3d2a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="badge" id="initial">D</div>
+    <div><b id="drName">Dra.</b><small>Advocacia Previdenciária · INSS</small></div>
+  </header>
+
+  <!-- INÍCIO -->
+  <section class="screen on" id="s-home">
+    <span class="pill">TESTE GRATUITO · 1 MINUTO</span>
+    <h1>Teve um acidente e ficou com <em>sequela</em>? Descubra se você pode ter direito ao auxílio-acidente.</h1>
+    <p class="lead">Muita gente perde força na mão, fica mancando ou com dor depois de uma fratura… e continua trabalhando sem saber que o INSS pode pagar uma indenização mensal por isso.</p>
+    <ul class="checks">
+      <li><span>✅</span>Vale para acidente de <b>qualquer tipo</b>: futebol, trânsito, queda em casa ou no trabalho</li>
+      <li><span>✅</span>Em geral, você pode receber <b>e continuar trabalhando</b></li>
+      <li><span>✅</span>No final, você fala direto com a Doutora no WhatsApp</li>
+    </ul>
+    <div class="nav">
+      <button class="cta" id="start">Fazer meu teste agora →</button>
+      <div class="trust"><span>🔒 Seus dados protegidos</span><span>⏱ 7 perguntas</span><span>💬 Sem compromisso</span></div>
+    </div>
+  </section>
+
+  <!-- PERGUNTAS -->
+  <section class="screen" id="s-quiz">
+    <div class="step" id="stepTxt">Pergunta 1 de 7</div>
+    <div class="progress"><i id="bar"></i></div>
+    <h2 id="qTitle"></h2>
+    <p class="hint" id="qHint"></p>
+    <div class="opts" id="opts"></div>
+    <div class="edu" id="edu"></div>
+    <div class="nav">
+      <button class="cta" id="next" disabled>Continuar →</button>
+      <button class="ghost" id="back">← Voltar</button>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section class="screen" id="s-form">
+    <div class="step">Último passo</div>
+    <div class="progress"><i style="width:95%"></i></div>
+    <h2>Pronto! Para onde enviamos a análise do seu caso?</h2>
+    <p class="hint">A Doutora vai receber suas respostas e continuar a conversa com você pelo WhatsApp.</p>
+    <form id="leadForm" novalidate>
+      <div class="field"><label for="nome">Seu nome</label><input id="nome" autocomplete="name" placeholder="Ex.: Maria Souza" maxlength="120" required></div>
+      <div class="field"><label for="tel">Seu WhatsApp com DDD</label><input id="tel" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="(86) 99999-9999" maxlength="16" required></div>
+      <div class="err" id="err"></div>
+      <div class="nav"><button class="cta" type="submit" id="send">Ver meu resultado →</button></div>
+    </form>
+    <p class="disc">🔒 Usamos seus dados só para analisar o seu caso. Nada de spam.</p>
+  </section>
+
+  <!-- ANALISANDO -->
+  <section class="screen" id="s-load">
+    <div class="loader">
+      <div class="spin"></div>
+      <h2>Analisando suas respostas…</h2>
+      <ul class="lsteps" id="lsteps">
+        <li>🔎 Verificando o tipo de acidente</li>
+        <li>🩺 Avaliando a sequela informada</li>
+        <li>💼 Cruzando com a sua profissão</li>
+        <li>📋 Conferindo a qualidade de segurado</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- RESULTADO -->
+  <section class="screen" id="s-result">
+    <span class="pill" id="rPill"></span>
+    <h2 id="rTitle"></h2>
+    <p class="lead" id="rText"></p>
+    <div class="score">
+      <div class="lvl" id="rLvl"></div>
+      <div class="meter"><i id="rMeter"></i></div>
+      <ul class="mirror" id="rMirror"></ul>
+    </div>
+    <div class="nav">
+      <button class="cta wa" id="wa"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 0 0 1.9 17.7L.5 23.5l6-1.4A11.8 11.8 0 0 0 20.5 3.5zm-8.6 18.1a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.6.9.9-3.5-.2-.4a9.8 9.8 0 1 1 8.3 4.6zm5.4-7.3c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.4 13.4 0 0 0 5.2 4.6c1.9.8 2.7.9 3.6.7a3.1 3.1 0 0 0 2-1.4 2.5 2.5 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3z"/></svg><span id="waTxt">Falar com a Doutora no WhatsApp</span></button>
+      <p class="disc" id="rDisc">Este teste é uma triagem inicial e não garante a concessão do benefício. Cada caso é analisado individualmente.</p>
+    </div>
+  </section>
+</div>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
