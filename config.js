@@ -3,7 +3,8 @@ window.CONFIG = {
   DR_NAME: '',                 // ex.: 'Dra. Dina Silva' (vazio = "a Doutora")
   OAB: '',                     // ex.: 'OAB/PI 12.345' — aparece no rodapé quando preenchido
   WHATSAPP: '558681207124',    // número da Doutora (DDI+DDD+número, só dígitos)
-  META_PIXEL_ID: '',           // ID do Pixel da Meta (vazio = desativado)
+  META_PIXEL_ID: '29083940511234634', // Pixel da Meta (vazio = desativado)
+  CAPI_URL: 'https://htinilgvvzrazwazgojt.supabase.co/functions/v1/meta-capi', // API de Conversões (servidor)
   SUPABASE_URL: 'https://htinilgvvzrazwazgojt.supabase.co',
   SUPABASE_KEY: 'sb_publishable_DDdaUgLYaw5Fv3qMbvFBdQ_ArZ8HVuH', // chave pública (só permite inserir leads)
   TABLE: 'leads_auxilio_acidente'

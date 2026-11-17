@@ -17,7 +17,27 @@
   function fbq() { window.fbq && window.fbq.apply(null, arguments); }
   if (C.META_PIXEL_ID) {
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('set', 'autoConfig', false, C.META_PIXEL_ID); // sem "SubscribedButtonClick" automático
     fbq('init', C.META_PIXEL_ID); fbq('track', 'PageView');
+  }
+
+  // API de Conversões (servidor) — mesmo event_id do Pixel para desduplicar
+  const testCode = sp.get('test_event_code') || '';
+  const cookie = (n) => (document.cookie.match('(^|; )' + n + '=([^;]*)') || [])[2] || '';
+  function fbc() {
+    const c = cookie('_fbc'); if (c) return c;
+    return utm.fbclid ? `fb.1.${Date.now()}.${utm.fbclid}` : '';
+  }
+  function track(name, eventId, extra) {
+    fbq('track', name, Object.assign({ content_name: 'auxilio-acidente' }, extra || {}), { eventID: eventId });
+    if (!C.CAPI_URL) return;
+    try {
+      fetch(C.CAPI_URL, {
+        method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_name: name, event_id: eventId, nome: lead && lead.nome, tel: lead && lead.tel,
+          nivel: lead && lead.nivel, url: location.href.split('?')[0], fbp: cookie('_fbp'), fbc: fbc(), test_event_code: testCode })
+      }).catch(() => {});
+    } catch (_) {}
   }
 
   function show(id) {
@@ -90,10 +110,11 @@
     if (tel.length < 10) return $('err').textContent = 'Digite o WhatsApp com DDD.';
     $('err').textContent = ''; $('send').disabled = true;
     const r = evaluate();
-    lead = { nome, tel, ...r };
+    const id = (crypto.randomUUID && crypto.randomUUID()) || ('l' + Date.now() + Math.random().toString(16).slice(2));
+    lead = { id, nome, tel, ...r };
     show('s-load');
     save(lead); // não bloqueia o fluxo
-    fbq('track', 'Lead', { content_name: 'auxilio-acidente', status: r.nivel });
+    track('CompleteRegistration', id, { status: r.nivel });
     const lis = $('lsteps').children;
     for (let k = 0; k < lis.length; k++) { await wait(650); lis[k].classList.add('ok'); }
     await wait(500); result();
@@ -106,7 +127,7 @@
       fetch(`${C.SUPABASE_URL}/rest/v1/${C.TABLE}`, {
         method: 'POST', keepalive: true,
         headers: { apikey: C.SUPABASE_KEY, Authorization: `Bearer ${C.SUPABASE_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-        body: JSON.stringify({ nome: l.nome, whatsapp: '55' + l.tel, qualificacao: l.nivel, pontuacao: l.pts, respostas: l.resumo, utm, pagina: location.href.split('?')[0] })
+        body: JSON.stringify({ id: /^[0-9a-f-]{36}$/.test(l.id) ? l.id : undefined, nome: l.nome, whatsapp: '55' + l.tel, qualificacao: l.nivel, pontuacao: l.pts, respostas: l.resumo, utm, pagina: location.href.split('?')[0] })
       }).catch(() => {});
     } catch (_) {}
   }
@@ -147,8 +168,9 @@
     const msg = `Olá${C.DR_NAME ? ', ' + C.DR_NAME : ', Doutora'}! Meu nome é ${lead.nome}. Fiz o teste do auxílio-acidente no site e gostaria do meu diagnóstico.\n\n` +
       `• Acidente: ${r.acidente.join(', ')}\n• Parte do corpo: ${r.corpo.join(', ')}\n• Sequela: ${r.sequela.join(', ')}\n` +
       `• No trabalho: ${r.trabalho.join(', ')}\n• Vínculo: ${r.vinculo.join(', ')}\n• Quando: ${r.quando.join(', ')}\n• Benefício: ${r.beneficio.join(', ')}`;
-    fbq('track', 'Contact');
-    location.href = `https://wa.me/${C.WHATSAPP}?text=${encodeURIComponent(msg)}`;
+    track('Contact', lead.id + ':contact', { status: lead.nivel });
+    const go = `https://wa.me/${C.WHATSAPP}?text=${encodeURIComponent(msg)}`;
+    setTimeout(() => { location.href = go; }, 350); // dá tempo ao Pixel de disparar
   };
 
   $('start').onclick = () => { fbq('trackCustom', 'QuizStart'); show('s-quiz'); render(); };
